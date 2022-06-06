@@ -8,8 +8,10 @@ from datetime import datetime
 
 
 from responses.registries import OrderedRegistry
+
+#first part of first request
 @responses.activate
-def sample_1a():
+def sample_1_i():
     responses.add(responses.GET, 'https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions',
                   json={"api": "/api/v1.0/swupdate/sw-versions",
                       "status": "success",
@@ -29,8 +31,9 @@ def sample_1a():
 
 
 
+#second part of first request
 @responses.activate(registry=OrderedRegistry)
-def sample_1b():
+def sample_1_ii():
             responses.add(
                 responses.GET,
                 "https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions",
@@ -65,6 +68,8 @@ def sample_1b():
             resp = requests.get("https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions")
             assert resp.status_code == 400
             assert resp.json() =={"msg": "Bad request"}
+
+#second request
 @responses.activate
 def sample_2():
     responses.add(responses.GET, 'https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions',
@@ -88,6 +93,7 @@ def sample_2():
         resp = requests.get('https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions')
         print(resp.json())
 
+#third request
 @responses.activate
 def sample_3():
     responses.add(responses.GET, 'https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/hw-revison',
@@ -103,6 +109,7 @@ def sample_3():
         print("boardname and revision did not matched")
 
 
+#fourth request
 @responses.activate
 def sample_4():
      time=str(datetime.now())
@@ -115,6 +122,8 @@ def sample_4():
      except AssertionError:
          print("fail")
 
+
+#fifth request
 @responses.activate
 def sample_5():
     responses.add(responses.GET, 'https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/boot-status',
