@@ -56,18 +56,25 @@ def sample_1_ii():
                 json={"msg": "Bad request"},status=400,
             )
 
-            resp = requests.get("https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions")
-            assert resp.status_code == 200
-            assert resp.json() =={"msg": "Success"}
-            resp = requests.get("https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions")
-            assert resp.status_code == 500
-            assert resp.json() =={"msg": "Internal Server Error"}
-            resp = requests.get("https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions")
-            assert resp.status_code == 401
-            assert resp.json() =={"msg": "Unauthorized"}
-            resp = requests.get("https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions")
-            assert resp.status_code == 400
-            assert resp.json() =={"msg": "Bad request"}
+            #checks for success message
+            response1 = requests.get("https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions")
+            assert response1.status_code == 200
+            assert response1.json() =={"msg": "Success"}
+
+            #checks for internal server error
+            response2 = requests.get("https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions")
+            assert response2.status_code == 500
+            assert response2.json() =={"msg": "Internal Server Error"}
+            response3 = requests.get("https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions")
+
+            #checks for unauthorized error
+            assert response3.status_code == 401
+            assert response3.json() =={"msg": "Unauthorized"}
+
+            #checks for bad request error
+            response4 = requests.get("https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions")
+            assert response4.status_code == 400
+            assert response4.json() =={"msg": "Bad request"}
 
 #second request
 @responses.activate
@@ -90,8 +97,8 @@ def sample_2():
                                 "name": "Cruise 1.0",
                                 "version": "2.0",
                             }})
-        resp = requests.get('https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions')
-        print(resp.json())
+        response = requests.get('https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/sw-versions')
+        print(response.json())
 
 #third request
 @responses.activate
@@ -101,10 +108,10 @@ def sample_3():
                       "status": "success",
                       "board": "Cruiseboardname",
                       "revision": "1.1", })
-    resp = requests.get('https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/hw-revison')
+    response = requests.get('https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/hw-revison')
     #print(resp.json()["board"])
     try:
-        assert resp.json()["board"] == "Cruiseboardname" and resp.json()["revision"] == "1.1"
+        assert response.json()["board"] == "Cruiseboardname" and response.json()["revision"] == "1.1"
     except AssertionError:
         print("boardname and revision did not matched")
 
@@ -114,10 +121,10 @@ def sample_3():
 def sample_4():
      time=str(datetime.now())
      responses.add(responses.GET,'https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/system/clock/value',json={'current_time': time})
-     resp = requests.get('https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/system/clock/value')
-     print(resp.json())
+     response = requests.get('https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/system/clock/value')
+     print(response.json())
      try:
-         assert resp.json()["current_time"] == time
+         assert response.json()["current_time"] == time
          print("Pass")
      except AssertionError:
          print("fail")
@@ -130,8 +137,8 @@ def sample_5():
                   json={"api": "/api/v1.0/swupdate/boot-status",
                         "boot-status": "success",
                         "status": "fail"})
-    resp = requests.get('https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/boot-status')
-    if resp.json()["status"] == "fail":
+    response = requests.get('https://7facbdb5-b28c-46e1-a70f-a00b44f62626.mock.pstmn.io/api/v1.0/swupdate/boot-status')
+    if response.json()["status"] == "fail":
         print("device should be reset")
     else:
         print("device is working properly")
